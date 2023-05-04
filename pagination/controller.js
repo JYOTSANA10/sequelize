@@ -304,5 +304,6 @@ module.exports = {
   oneToManyCreate,
   manyToManyCreate,
   manyToMany,
-  oneToManyUpdate
+  oneToManyUpdate,
+  manyToManyUpdate,
 };
