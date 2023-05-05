@@ -5,29 +5,36 @@ const Sequelize = db.Sequelize;
 const Op = Sequelize.Op;
 
 async function data_table(req, res, next) {
-  const { draw, start, length, order, search } = req.query;
+  const { draw, start, length, order, search, columns } = req.query;
+  console.log(columns[4].data);
 
-  const column_name = ["firstName", "lastName", "email", "gender", "city"];
+  //  const column_name = ["firstName", "lastName", "email", "gender", "city"];
 
-  let columnOrder, orderDirection, column_Order;
+  let columnOrder, orderDirection, orders;
   if (order !== undefined) {
     const { column, dir } = order[0];
+    console.log(columns[column].data);
 
-    console.log(order[0]);
-
-    console.log(dir);
-    columnOrder = column_name[column];
-    orderDirection = dir;
+    if (column == 4) {
+      orders = [[{ model: db.Details }, "city", dir]];
+    } else if (column == 5) {
+      orders = [[{ model: db.Contact }, "contact_no", dir]];
+    } else {
+      columnOrder = columns[column].data;
+      orderDirection = dir;
+      orders = [[columnOrder, orderDirection]];
+    }
   } else {
     columnOrder = "id";
     orderDirection = "asc";
+    orders = [[columnOrder, orderDirection]];
   }
 
   const query = {
     subQuery: false,
     where: {},
     // order: [[ {model: db.Details} , columnOrder, orderDirection]],
-    order: [[columnOrder, orderDirection]],
+    order: orders,
     limit: parseInt(length),
     offset: parseInt(start),
     include: [
